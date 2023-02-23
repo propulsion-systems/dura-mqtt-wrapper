@@ -3,19 +3,19 @@ import { subscribe, Subscriptions } from '../src/mqtt'
 
 test('It should add a subscription and call client subscribe function', () => {
   const topic = 'foo';
-  const client = vi.fn()
+  const clientSubscribe = vi.fn()
 
   let subscriptions: Subscriptions = [];
 
   subscriptions = subscribe({
     subscription: { topic, callback: (payload) => undefined },
     subscriptions,
-    client,
+    clientSubscribe,
   })
 
   expect(subscriptions.length).toBe(1);
   expect(subscriptions[0].topic).toBe(topic);
 
-  expect(client).toBeCalledTimes(1);
-  expect(client).toBeCalledWith(topic);
+  expect(clientSubscribe).toBeCalledTimes(1);
+  expect(clientSubscribe).toBeCalledWith(topic);
 });

@@ -1,6 +1,8 @@
+export type Callback = (payload: string) => void;
+
 export interface SubscriptionObject {
   readonly topic: string;
-  readonly callback: (payload: string) => void;
+  readonly callback: Callback;
 }
 
 export type Subscriptions = Array<SubscriptionObject>;
@@ -79,26 +81,30 @@ export function onMessage({ topic, payload, subscriptions }: MessageObject): voi
   }
 }
 
+export type ClientSubscribe = (topic: string) => void;
+
 export interface SubscribeObject {
   readonly subscription: SubscriptionObject;
   readonly subscriptions: Subscriptions;
-  readonly client: (topic: string) => void;
+  readonly clientSubscribe: ClientSubscribe;
 }
 
-export function subscribe({ subscription, subscriptions, client }: SubscribeObject): Subscriptions {
-  client(subscription.topic)
+export function subscribe({ subscription, subscriptions, clientSubscribe }: SubscribeObject): Subscriptions {
+  clientSubscribe(subscription.topic)
 
   return [...subscriptions, subscription];
 }
 
+export type ClientUnsubscribe = (topic: string) => void;
+
 export interface UnsubscribeObject {
   readonly topic: string;
   readonly subscriptions: Subscriptions;
-  readonly client: (topic: string) => void;
+  readonly clientUnsubscribe: ClientUnsubscribe;
 }
 
-export function unsubscribe({ topic, subscriptions, client }: UnsubscribeObject): Subscriptions {
-  client(topic)
+export function unsubscribe({ topic, subscriptions, clientUnsubscribe }: UnsubscribeObject): Subscriptions {
+  clientUnsubscribe(topic)
 
   return subscriptions.filter(({ topic: matcher }) => topic !== matcher);
 }
