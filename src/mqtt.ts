@@ -1,21 +1,16 @@
-interface Subscription<T> {
+export interface SubscriptionObject {
   readonly topic: string;
-  readonly callback: (payload: T | string) => T | void;
+  readonly callback: (payload: string) => void;
 }
 
-interface Message {
-  readonly topic: string;
-  readonly payload: string;
-}
+export type Subscriptions = Array<SubscriptionObject>;
 
-type Subscriptions<T> = Array<Subscription<T>>;
-
-interface Match {
+export interface MatchObject {
   readonly topic: string;
   readonly matcher: string;
 }
 
-export function matches({ topic, matcher }: Match): boolean {
+export function matches({ topic, matcher }: MatchObject): boolean {
   // Matcher: #
   if (matcher === '#') {
     return true;
@@ -68,7 +63,13 @@ export function matches({ topic, matcher }: Match): boolean {
   return true;
 }
 
-export function onMessage<T>({ topic, payload }: Message, subscriptions: Subscriptions<T>) {
+export interface MessageObject {
+  readonly topic: string;
+  readonly payload: string;
+  readonly subscriptions: Subscriptions;
+}
+
+export function onMessage({ topic, payload, subscriptions }: MessageObject): void {
   for (const { topic: matcher, callback } of subscriptions) {
     if (!matches({ topic: topic, matcher: matcher })) {
       continue;
@@ -78,20 +79,26 @@ export function onMessage<T>({ topic, payload }: Message, subscriptions: Subscri
   }
 }
 
-interface Subscribe<T> {
-  readonly subscription: Subscription<T>;
-  readonly subscriptions: Subscriptions<T>;
+export interface SubscribeObject {
+  readonly subscription: SubscriptionObject;
+  readonly subscriptions: Subscriptions;
+  readonly client: (topic: string) => void;
 }
 
-export function subscribe<T>({ subscription, subscriptions }: Subscribe<T>): Subscriptions<T> {
+export function subscribe({ subscription, subscriptions, client }: SubscribeObject): Subscriptions {
+  client(subscription.topic)
+
   return [...subscriptions, subscription];
 }
 
-interface Unsubscribe<T> {
+export interface UnsubscribeObject {
   readonly topic: string;
-  readonly subscriptions: Subscriptions<T>;
+  readonly subscriptions: Subscriptions;
+  readonly client: (topic: string) => void;
 }
 
-export function unsubscribe<T>({ topic, subscriptions }: Unsubscribe<T>): Subscriptions<T> {
-  return subscriptions.filter(({ topic: matcher }) => !matches({ topic: topic, matcher: matcher }));
+export function unsubscribe({ topic, subscriptions, client }: UnsubscribeObject): Subscriptions {
+  client(topic)
+
+  return subscriptions.filter(({ topic: matcher }) => topic !== matcher);
 }
