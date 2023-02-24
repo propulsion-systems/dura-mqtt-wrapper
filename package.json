@@ -3,8 +3,17 @@
   "private": false,
   "version": "0.0.1",
   "type": "module",
+  "main": "./dist/dura-mqtt-wrapper.js",
   "module": "./dist/dura-mqtt-wrapper.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/dura-mqtt-wrapper.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc && vite build",
     "test": "vitest",
