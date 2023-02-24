@@ -17,5 +17,5 @@ const tests = [
 for (const { topic, matcher, expectation } of tests) {
   test(`Topic: ${topic}, matcher: ${matcher} -> ${expectation}`, () => {
     expect(matches({ topic, matcher })).toBe(expectation);
-  })
+  });
 }

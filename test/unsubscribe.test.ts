@@ -3,11 +3,11 @@ import { unsubscribe, Subscriptions } from '../src/mqtt'
 
 test('It should remove a subscription and call client unsubscribe function', () => {
   const topic = 'foo';
-  const clientUnsubscribe = vi.fn()
+  const clientUnsubscribe = vi.fn();
 
   let subscriptions: Subscriptions = [{ topic, callback: (payload) => undefined }];
 
-  subscriptions = unsubscribe({ topic, subscriptions, clientUnsubscribe })
+  subscriptions = unsubscribe({ topic, subscriptions, clientUnsubscribe });
 
   expect(subscriptions.length).toBe(0);
 
