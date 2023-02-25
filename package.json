@@ -1,7 +1,13 @@
 {
   "name": "dura-mqtt-wrapper",
+  "description": "Simple wrapper for a nicer subscription api on old mqtt packages.",
   "private": false,
   "version": "0.0.1",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/propulsion-systems/dura-mqtt-wrapper.git"
+  },
   "type": "module",
   "main": "./dist/dura-mqtt-wrapper.js",
   "module": "./dist/dura-mqtt-wrapper.js",
