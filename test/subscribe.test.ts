@@ -1,21 +1,24 @@
 import { expect, test, vi } from 'vitest'
-import { subscribe, Subscriptions } from '../src/mqtt'
+import { Quality, subscribe, Subscriptions } from '../src/mqtt'
 
 test('It should add a subscription and call client subscribe function', () => {
   const topic = 'foo';
-  const clientSubscribe = vi.fn();
+  const quality = Quality.one;
+
+  const callback = vi.fn();
+  const wrapper = vi.fn();
 
   let subscriptions: Subscriptions = [];
 
   subscriptions = subscribe({
-    subscription: { topic, callback: (payload) => undefined },
+    subscription: { topic, quality: Quality.one, callback },
     subscriptions,
-    clientSubscribe,
+    wrapper,
   });
 
   expect(subscriptions.length).toBe(1);
   expect(subscriptions[0].topic).toBe(topic);
 
-  expect(clientSubscribe).toBeCalledTimes(1);
-  expect(clientSubscribe).toBeCalledWith(topic);
+  expect(wrapper).toBeCalledTimes(1);
+  expect(wrapper).toBeCalledWith({ topic, quality, callback });
 });

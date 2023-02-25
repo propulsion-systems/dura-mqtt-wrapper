@@ -1,16 +1,16 @@
 import { expect, test, vi } from 'vitest'
-import { unsubscribe, Subscriptions } from '../src/mqtt'
+import { unsubscribe, Subscriptions, Quality } from '../src/mqtt'
 
 test('It should remove a subscription and call client unsubscribe function', () => {
   const topic = 'foo';
-  const clientUnsubscribe = vi.fn();
+  const wrapper = vi.fn();
 
-  let subscriptions: Subscriptions = [{ topic, callback: (payload) => undefined }];
+  let subscriptions: Subscriptions = [{ topic, quality: Quality.zero, callback: (payload) => undefined }];
 
-  subscriptions = unsubscribe({ topic, subscriptions, clientUnsubscribe });
+  subscriptions = unsubscribe({ topic, subscriptions, wrapper });
 
   expect(subscriptions.length).toBe(0);
 
-  expect(clientUnsubscribe).toBeCalledTimes(1);
-  expect(clientUnsubscribe).toBeCalledWith(topic);
+  expect(wrapper).toBeCalledTimes(1);
+  expect(wrapper).toBeCalledWith(topic);
 });

@@ -82,7 +82,7 @@ export function onMessage({ topic, payload, subscriptions }: MessageObject): voi
   }
 }
 
-export enum Quality { One, Two, Three }
+export enum Quality { zero, one, two }
 
 export type SubscribeWrapperFunction = (subscription: SubscriptionObject) => void;
 
