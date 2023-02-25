@@ -2,6 +2,7 @@ export type Callback = (payload: string) => void;
 
 export interface SubscriptionObject {
   readonly topic: string;
+  readonly quality: Quality;
   readonly callback: Callback;
 }
 
@@ -81,30 +82,32 @@ export function onMessage({ topic, payload, subscriptions }: MessageObject): voi
   }
 }
 
-export type ClientSubscribe = (topic: string) => void;
+export enum Quality { One, Two, Three }
+
+export type SubscribeWrapperFunction = (subscription: SubscriptionObject) => void;
 
 export interface SubscribeObject {
   readonly subscription: SubscriptionObject;
   readonly subscriptions: Subscriptions;
-  readonly clientSubscribe: ClientSubscribe;
+  readonly wrapper: SubscribeWrapperFunction;
 }
 
-export function subscribe({ subscription, subscriptions, clientSubscribe }: SubscribeObject): Subscriptions {
-  clientSubscribe(subscription.topic)
+export function subscribe({ subscription, subscriptions, wrapper }: SubscribeObject): Subscriptions {
+  wrapper(subscription);
 
   return [...subscriptions, subscription];
 }
 
-export type ClientUnsubscribe = (topic: string) => void;
+export type UnsubscribeWrapperFunction = (topic: string) => void;
 
 export interface UnsubscribeObject {
   readonly topic: string;
   readonly subscriptions: Subscriptions;
-  readonly clientUnsubscribe: ClientUnsubscribe;
+  readonly wrapper: UnsubscribeWrapperFunction;
 }
 
-export function unsubscribe({ topic, subscriptions, clientUnsubscribe }: UnsubscribeObject): Subscriptions {
-  clientUnsubscribe(topic)
+export function unsubscribe({ topic, subscriptions, wrapper }: UnsubscribeObject): Subscriptions {
+  wrapper(topic);
 
   return subscriptions.filter(({ topic: matcher }) => topic !== matcher);
 }

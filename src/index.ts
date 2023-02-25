@@ -1,1 +1,1 @@
-export { matches, onMessage, subscribe, unsubscribe } from './mqtt'
+export { matches, onMessage, subscribe, unsubscribe } from './mqtt';
