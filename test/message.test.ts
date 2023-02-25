@@ -24,5 +24,5 @@ test('It should not call subscription callback if topic does not match', () => {
 
   onMessage({ topic: 'bar', payload, subscriptions });
 
-  expect(callback).toBeCalledTimes(1);
+  expect(callback).toBeCalledTimes(0);
 });
